@@ -15,6 +15,12 @@ import org.hibernate.annotations.UpdateTimestamp;
 @Entity
 @Table(name = "accounts")
 public class Account {
+
+  public enum ProviderType {
+    STRIPE,
+    // Add more provider types as needed
+  }
+
   @Id
   @Column(name = "id")
   @GeneratedValue
@@ -36,4 +42,11 @@ public class Account {
   @Column(name = "updated_at")
   @UpdateTimestamp
   private OffsetDateTime updatedAt;
+
+  @Column(name = "provider_id")
+  private String providerId;
+
+  @Enumerated(EnumType.STRING)
+  @Column(name = "provider_type")
+  private ProviderType providerType;
 }

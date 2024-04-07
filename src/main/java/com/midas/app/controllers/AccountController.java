@@ -13,6 +13,9 @@ import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 
 @Controller
 @RequiredArgsConstructor
@@ -28,11 +31,31 @@ public class AccountController implements AccountsApi {
    * @return User account created (status code 201)
    */
   @Override
+  @PostMapping("/createaccount")
   public ResponseEntity<AccountDto> createUserAccount(CreateAccountDto createAccountDto) {
     logger.info("Creating account for user with email: {}", createAccountDto.getEmail());
 
     var account =
         accountService.createAccount(
+            Account.builder()
+                .firstName(createAccountDto.getFirstName())
+                .lastName(createAccountDto.getLastName())
+                .email(createAccountDto.getEmail())
+                // .providerType(createAccountDto.getProviderType())
+                .build());
+
+    return new ResponseEntity<>(Mapper.toAccountDto(account), HttpStatus.CREATED);
+  }
+
+  @Override
+  @PatchMapping("/accounts/{accountId}")
+  public ResponseEntity<AccountDto> updateUserAccount(
+      String accountId, CreateAccountDto createAccountDto) {
+    logger.info("Creating account for user with email: {}", createAccountDto.getEmail());
+
+    var account =
+        accountService.updateAccount(
+            accountId,
             Account.builder()
                 .firstName(createAccountDto.getFirstName())
                 .lastName(createAccountDto.getLastName())
@@ -48,6 +71,7 @@ public class AccountController implements AccountsApi {
    * @return List of user accounts (status code 200)
    */
   @Override
+  @GetMapping("accounts/all")
   public ResponseEntity<List<AccountDto>> getUserAccounts() {
     logger.info("Retrieving all accounts");
 

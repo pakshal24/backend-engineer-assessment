@@ -3,7 +3,6 @@ plugins {
     id 'org.springframework.boot' version '3.2.2'
     id 'io.spring.dependency-management' version '1.1.4'
     id 'com.diffplug.spotless' version '6.21.0'
-    id 'se.solrike.sonarlint' version '2.0.0'
 
     id 'org.openapi.generator' version '7.1.0'
 }
@@ -41,8 +40,6 @@ dependencies {
 
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
 
-    sonarlintPlugins 'org.sonarsource.java:sonar-java-plugin:7.30.1.34514'
-
     implementation 'io.swagger.core.v3:swagger-annotations:2.2.20'
     implementation 'org.openapitools:jackson-databind-nullable:0.2.1'
 
@@ -58,43 +55,14 @@ dependencies {
     implementation 'io.gsonfire:gson-fire:1.9.0'
 
     implementation "com.stripe:stripe-java:24.14.0"
+    testImplementation 'org.testcontainers:junit-jupiter:1.15.3'
+
 }
 
 tasks.named('test') {
     useJUnitPlatform()
 }
 
-
-tasks.register('sonarlintListRules', SonarlintListRules) {
-    description = 'List sonarlint rules'
-    group = 'verification'
-}
-
-sonarlintMain {
-    source = fileTree("$layout.buildDirectory/src/main")
-    reports {
-        html {
-            enabled = true
-            outputLocation = layout.buildDirectory.file("/reports/sonarlint")
-        }
-        xml.enabled = true
-        sarif.enabled = false
-    }
-}
-
-sonarlint {
-    // excludeRules = ['java:S1186']
-    // includeRules = ['java:S1176', 'java:S1696', 'java:S4266']
-    ignoreFailures = false
-    maxIssues = 0 // default 0
-    // note that rule parameter names are case sensitive
-    // ruleParameters = [
-    //   'java:S1176' : [
-    //     'forClasses':'**.api.**',      // need javadoc for public methods in package matching 'api'
-    //     'exclusion': '**.private.**'] // do not need javadoc for classes under 'private'. Default is **.internal.**
-    // ]
-    showIssues = true // default true
-}
 
 
 // Spotless Formatter Configuration
@@ -139,8 +107,7 @@ sourceSets {
     }
 }
 
-import org.openapitools.generator.gradle.plugin.tasks.GenerateTask
-import se.solrike.sonarlint.SonarlintListRules
+import org.openapitools.generator.gradle.plugin.tasks.GenerateTask;
 
 tasks.register('_generateInternalOpenApi', GenerateTask) {
     outputs.upToDateWhen {

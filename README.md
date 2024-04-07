@@ -104,3 +104,64 @@ In this file, the following services have been defined:
 - postgres: [`postgres:latest`](https://hub.docker.com/_/postgres)
 
 Please review the tags of the used images and set them to the same as you're running in production.
+
+
+### Implementaion Approach
+
+According to the task file, The Motive of this application is to integrate a third party payment service into our system and that third
+party payment service is Stripe.
+
+There are 3 Api endpoints in the project
+1. Signup : Here User create account with us and simoulaneously our application creates user's stripe account and stripe's account id is stored in out database as well
+2. Update : Here User can patch update the details email, firstname, lastname. The update is also reflected in the stripe's database as well.
+3. GetAccounts: Here we fetch all the users data from our database
+
+All the implememntaion is done using temporal workflow as asked.
+Created createUserWorkflow and UpdateUserWorkflow.
+
+### Project Setup and Requirements
+
+On System
+1. Java
+2. Temporal Cli
+3. Docker Desktop
+4. PostgreSQL Database
+5. Stripe Account
+
+
+Steps to Run the Project
+1. Git Clone https://github.com/pakshal24/backend-engineer-assessment.git
+2. create Database in postgres
+3. Make changes in compose.yml file edit line no. 6,7,8 and 21,22,23 as per your credentials
+4. Add 'stripe.api-key' genrated from your stripe account in src/main/resources.application.properties file.
+5. start the docker
+6. start temporal server using this command
+
+```sh
+temporal server start-dev
+```
+6. Start The Application with this command
+
+```sh
+./gradlew bootRun
+```
+7. Hit the Apis using postman
+    1. UserSignup - localhost:8080/createaccount
+        Body->raw->json
+            {
+            "firstName":"Abhishek",
+            "lastName": "mahagan",
+            "email":"abhi.p@gmail.com"
+                }
+
+    2. Userupdate - localhost:8080/accounts/id
+        Body->raw->json
+            {
+            "firstName":"Abhishek",
+            "lastName": "mahagan",
+            "email":"abhi.p@gmail.com"
+                }
+        Patch Update you can update any of these fields or all the fields
+
+    3. Get All User - localhost:8080/accounts/all
+        Shows all the registerd users.
