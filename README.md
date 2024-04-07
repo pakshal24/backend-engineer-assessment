@@ -112,7 +112,7 @@ According to the task file, The Motive of this application is to integrate a thi
 party payment service is Stripe.
 
 There are 3 Api endpoints in the project
-1. Signup : Here User create account with us and simoulaneously our application creates user's stripe account and stripe's account id is stored in out database as well
+1. Signup : Here User create account with us and simultaneously our application creates user's stripe account and stripe's account id is stored in out database as well
 2. Update : Here User can patch update the details email, firstname, lastname. The update is also reflected in the stripe's database as well.
 3. GetAccounts: Here we fetch all the users data from our database
 
@@ -165,3 +165,7 @@ temporal server start-dev
 
     3. Get All User - localhost:8080/accounts/all
         Shows all the registerd users.
+
+
+### Video Implementation
+    https://drive.google.com/file/d/1_UaJS2AThOQdgsM3FxC0aQ2yK9FjpIwq/view?usp=sharing
